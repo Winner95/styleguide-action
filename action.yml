@@ -16,7 +16,13 @@ on:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+   defaults:
+      NODE_VERSION: 12.18.3
+      FOLDER_NAME: Docs
+   env:
+      NODE_VERSION: 12.18.3
+      _PATH_FOLDER_NAME: Docs
+  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -26,11 +32,13 @@ on:
       - name: setup node
         uses: actions/setup-node@v1
         with:
-          node-version: ${{ secrets.NODE_VERSION }}
+          node-version: $NODE_VERSION
           
       # install deps
+      - name: install deps and build 
+      env:
       - run: yarn install
-      - run: yarn styleguide --buildDir ./${{ secrets.FOLDER_NAME }}
+      - run: yarn styleguide --buildDir ./$_PATH_FOLDER_NAME
         
       # depl
       - name: GitHub Pages Deploy
@@ -38,4 +46,4 @@ on:
         with:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          remote_url: ${{ secrets.REMOTE_URL }}
+          remote_url: $REMOTE_URL
