@@ -24,9 +24,8 @@ on:
          description: 'Github token from secrets'
         required: true
       remoteUrl:
-        description: 'Full remote url of repository to push'
-        required: false
-        default: '12.18.3'
+        description: 'Full remote url of repository to push, e.g. - "https://github.com/badoo/styleguide.git"'
+        required: true
       nodeVersion:
         description: 'Version of NodeJS to run'
         required: false
@@ -58,6 +57,6 @@ on:
       - name: GitHub Pages Deploy
         uses: appleboy/gh-pages-action@v0.0.2
         with:
-          username: ${{ INPUT_USERNAME }}
-          password: ${{ INPUT_PASSWORD }}
+          username: $INPUT_USERNAME
+          password: $INPUT_PASSWORD
           remote_url: $INPUT_REMOTE_URL
