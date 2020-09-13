@@ -16,12 +16,26 @@ on:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-   defaults:
-      NODE_VERSION: 12.18.3
-      _PATH_FOLDER_NAME: Docs
-   env:
-      NODE_VERSION: 12.18.3
-      _PATH_FOLDER_NAME: Docs
+    inputs:
+      username:
+        description: 'Github username'
+        required: true
+      password:
+         description: 'Github token from secrets'
+        required: true
+      remoteUrl:
+        description: 'Full remote url of repository to push'
+        required: false
+        default: '12.18.3'
+      nodeVersion:
+        description: 'Version of NodeJS to run'
+        required: false
+        default: '12.18.3'
+      pathFolderName:
+        description: 'temporary path, which you will use for build & deploy'
+        required: false
+        default: 'Docs'
+    
   
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -29,21 +43,21 @@ on:
       - uses: actions/checkout@v2
 
       # Runs a single command using the runners shell
-      - name: setup node
+      - name: Setup NodeJS Environment
         uses: actions/setup-node@v1
         with:
-          node-version: $NODE_VERSION
+          node-version: $INPUT_NODE_VERSION
           
       # install deps
-      - name: install deps and build 
+      - name: Install JavaScript Dependencies 
       env:
       - run: yarn install
-      - run: yarn styleguide --buildDir ./$_PATH_FOLDER_NAME
+      - run: yarn styleguide --buildDir ./$INPUT_PATH_FOLDER_NAME
         
       # depl
       - name: GitHub Pages Deploy
         uses: appleboy/gh-pages-action@v0.0.2
         with:
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          remote_url: $REMOTE_URL
+          username: ${{ INPUT_USERNAME }}
+          password: ${{ INPUT_PASSWORD }}
+          remote_url: $INPUT_REMOTE_URL
